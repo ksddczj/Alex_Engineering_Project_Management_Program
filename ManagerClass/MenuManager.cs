@@ -120,7 +120,7 @@ public static class MenuManager //get input for menu and handle input
         while (true)
         {
             MenuDisplay.DisplayMainMenu();
-            MainMenuUserOption userChoice = InputReader.ReadMainMenuOptionFromUser();
+            MainMenuUserOption userChoice = InputGetter.GetMainMenuOptionFromUser();
             InputHandler.HandleUserChoiceForMainMenu(userChoice);
         }
     }
@@ -132,7 +132,7 @@ public static class MenuManager //get input for menu and handle input
         {
             MenuDisplay.DisplayManageExistingProjectMenu();
             ManageExistingProjectMenuOption userChoice =
-                InputReader.ReadManageExistingProjectMenuOptionFromUser();
+                InputGetter.GetManageExistingProjectMenuOptionFromUser();
             stayInManageExistingProjectMenu =
                 InputHandler.HandleUserChoiceForManageExistingProjectMenu(userChoice);
         }
@@ -150,7 +150,7 @@ public static class MenuManager //get input for menu and handle input
             //get user to select from project management menu
             MenuDisplay.DisplayProjectManagementMenu();
             ProjectManagementMenuOption userChoiceForProjectManagement =
-                InputReader.ReadProjectManagementMenuOptionFromUser();
+                InputGetter.GetProjectManagementMenuOptionFromUser();
 
             //handle user choice
             stayInProjectManagement = InputHandler.HandleUserChoiceForProjectManagementMenu(

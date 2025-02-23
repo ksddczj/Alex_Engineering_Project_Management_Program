@@ -1,9 +1,27 @@
 public static class InputGetter
 {
+    public static MainMenuUserOption GetMainMenuOptionFromUser()
+    {
+        Console.WriteLine("Select one of the options from the main menu:");
+        return InputReader.ReadMainMenuOptionFromUser();
+    }
+
+    public static ManageExistingProjectMenuOption GetManageExistingProjectMenuOptionFromUser()
+    {
+        Console.WriteLine("Select one of the options from the menu:");
+        return InputReader.ReadManageExistingProjectMenuOptionFromUser();
+    }
+
+    public static ProjectManagementMenuOption GetProjectManagementMenuOptionFromUser()
+    {
+        Console.WriteLine("Select one of the options from the menu:");
+        return InputReader.ReadProjectManagementMenuOptionFromUser();
+    }
+
     public static ProjectType GetProjectTypeFromUser()
     {
-        Console.WriteLine("Select Project Type:");
         MenuDisplay.DisplayProjectTypeMenu();
+        Console.WriteLine("Select Project Type:");
         return InputReader.ReadProjectTypeFromUser();
     }
 
@@ -15,8 +33,8 @@ public static class InputGetter
 
     public static string GetExistingClientFromUser(List<string> existingClients)
     {
-        Console.WriteLine("Select existing client: ");
         Dictionary<int, string> clientsDictionary = MenuDisplay.DisplayItemsAsMenu(existingClients);
+        Console.WriteLine("Select existing client: ");
         int userChoice = InputReader.ReadUserChoice(1, existingClients.Count);
         return clientsDictionary[userChoice];
     }
@@ -184,6 +202,7 @@ public static class InputGetter
     public static string GetProjectIDFromUser()
     {
         Console.Write("Enter project ID: ");
+        Console.WriteLine("Project ID starts with P followed by a number eg. P001.");
         return InputReader.ReadStringInputFromUser();
     }
 
