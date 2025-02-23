@@ -1,0 +1,17 @@
+# Ignore Visual Studio temporary files, build results, and
+# folder config folder
+.vscode/
+.vscode/*
+.vs/
+.vs/*
+project.lock.json
+project.fragment.lock.json
+
+# Ignore build results
+[Dd]ebug*/
+[Rr]elease*/
+x64/
+x86/
+[Aa][Rr][Mm]*/
+[Bb][Ii][Nn]*/
+[Oo][Bb][Jj]*/
