@@ -29,7 +29,7 @@ public abstract class Project
         Console.WriteLine($"Project Type: {Type}");
         Console.WriteLine("Stages:");
 
-        foreach (var stage in this.Stages)
+        foreach (var stage in this.Stages.OrderBy(s => s.Deadline))
         {
             string status = stage.IsCompleted ? "Completed" : "Pending";
             Console.WriteLine(
