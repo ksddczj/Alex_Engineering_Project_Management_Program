@@ -59,22 +59,49 @@ public static class TaskManager
         return ProjectManager.FindProjectsByType(projectTypeFromUser);
     }
 
-    public static void DoUpdateStageDeadline(Project projectToUpdate) //review timeline
+    public static void DoUpdateStageDeadline(Project projectToUpdate)
     {
-        StageName stageToUpdate = InputGetter.GetProjectStageFromUser(projectToUpdate.Type);
-        DateTime newDealine = InputGetter.GetNewDeadlineFromUser();
-        ProjectManager.UpdateProjectStageDeadline(projectToUpdate, stageToUpdate, newDealine);
-    }
-
-    public static void DoMarkStageAsCompleted(Project projectToUpdate) //review timeline
-    {
-        StageName stageToMarkAsCompleted = InputGetter.GetProjectStageFromUser(
+        StageName nameOfTheStageToUpdate = InputGetter.GetProjectStageFromUser(
             projectToUpdate.Type
         );
-        ProjectManager.MarkProjectStageCompleted(projectToUpdate, stageToMarkAsCompleted);
+
+        //judge if the stage is already marked completed
+        if (ProjectManager.CheckProjectStageIsCompleted(projectToUpdate, nameOfTheStageToUpdate))
+        {
+            Console.WriteLine(
+                "Stage is alreay makred as completed. Deadline of it can not be updated."
+            );
+            return;
+        }
+
+        DateTime newDealine = InputGetter.GetNewDeadlineFromUser();
+        ProjectManager.UpdateProjectStageDeadline(
+            projectToUpdate,
+            nameOfTheStageToUpdate,
+            newDealine
+        );
     }
 
-    public static void DoGetProjectStatus(Project projectToShowStatus) //review timeline
+    public static void DoMarkStageAsCompleted(Project projectToUpdate)
+    {
+        StageName nameOfTheStageToMarkAsCompleted = InputGetter.GetProjectStageFromUser(
+            projectToUpdate.Type
+        );
+        if (
+            ProjectManager.CheckProjectStageIsCompleted(
+                projectToUpdate,
+                nameOfTheStageToMarkAsCompleted
+            )
+        )
+        {
+            Console.WriteLine("Stage is alreay makred as completed.");
+            return;
+        }
+
+        ProjectManager.MarkProjectStageCompleted(projectToUpdate, nameOfTheStageToMarkAsCompleted);
+    }
+
+    public static void DoGetProjectStatus(Project projectToShowStatus)
     {
         ProjectManager.GetProjectStatus(projectToShowStatus);
     }

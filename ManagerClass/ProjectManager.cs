@@ -78,13 +78,26 @@ public static class ProjectManager
         DateTime newDeadline
     )
     {
+        //fetch the stage to be updated
         Stage stageToUpdate = projectToUpdate.Stages.Single(s =>
             s.StageName == nameOfTheStageToUpdate
         );
-        stageToUpdate.UpdateDeadline(newDeadline);
-        Console.WriteLine(
-            $"Deadline for {nameOfTheStageToUpdate} updated to {newDeadline.ToShortDateString()}."
-        );
+
+        //judge if the new dealine contradicates other stages' deadline
+        bool deadlineIsValid = ValidateStageDeadline(newDeadline, projectToUpdate, stageToUpdate);
+
+        if (deadlineIsValid)
+        {
+            stageToUpdate.UpdateDeadline(newDeadline);
+            Console.WriteLine(
+                $"Deadline for {nameOfTheStageToUpdate} updated to {newDeadline.ToShortDateString()}."
+            );
+        }
+        else
+        {
+            Console.WriteLine($"Deadline for {nameOfTheStageToUpdate} is not updated.");
+            return;
+        }
 
         using (var context = new DatabaseContext())
         {
@@ -109,17 +122,38 @@ public static class ProjectManager
         }
     }
 
-    public static void MarkProjectStageCompleted(Project project, StageName stageName)
+    public static void MarkProjectStageCompleted(
+        Project projectToUpdate,
+        StageName nameOfTheStageToUpdate
+    )
     {
-        Stage stageToUpdate = project.Stages.Where(s => s.StageName == stageName).First();
-        stageToUpdate.MarkAsCompleted();
-        Console.WriteLine($"Deadline for {stageName} marked as completed.");
+        //fetch stage to update
+        Stage stageToUpdate = projectToUpdate.Stages.Single(s =>
+            s.StageName == nameOfTheStageToUpdate
+        );
+
+        //judge if the stage to be market completed does not have any stages before it marekd uncompleted.
+        bool stageCanBeMarkedCompleted = ValidateStageIsCompletedFlag(
+            projectToUpdate,
+            stageToUpdate
+        );
+
+        if (stageCanBeMarkedCompleted)
+        {
+            stageToUpdate.MarkAsCompleted();
+            Console.WriteLine($"Deadline for {nameOfTheStageToUpdate} marked as completed.");
+        }
+        else
+        {
+            Console.WriteLine($"Deadline for {nameOfTheStageToUpdate} is not marked as completed.");
+            return;
+        }
 
         // Use a new DbContext instance to save the changes
         using (var context = new DatabaseContext())
         {
             // Re-attach the project entity
-            context.Projects.Attach(project);
+            context.Projects.Attach(projectToUpdate);
 
             // Mark the stage entity as modified
             context.Entry(stageToUpdate).State = EntityState.Modified;
@@ -220,6 +254,209 @@ public static class ProjectManager
             var clientNames = context.Projects.Select(p => p.Client).Distinct().ToList();
 
             return clientNames;
+        }
+    }
+
+    private static bool ValidateStageDeadline(
+        DateTime deadLineToValidate,
+        Project project,
+        Stage stage
+    )
+    {
+        if (project.Type.Equals(ProjectType.AutomotiveEngineering))
+        {
+            switch (stage.StageName)
+            {
+                case StageName.ProjectStart:
+                    if (
+                        deadLineToValidate
+                        > project
+                            .Stages.Single(s => s.StageName.Equals(StageName.ConceptCompletion))
+                            .Deadline
+                    )
+                    {
+                        Console.WriteLine(
+                            "Invalid deadline! New deadline for the current stage can not be later than the preceding stage!"
+                        );
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                case StageName.ConceptCompletion:
+                    if (
+                        deadLineToValidate
+                        < project
+                            .Stages.Single(s => s.StageName.Equals(StageName.ProjectStart))
+                            .Deadline
+                    )
+                    {
+                        Console.WriteLine(
+                            "Invalid deadline! New deadline for the current stage can not be earlier than the previous stage!"
+                        );
+                        return false;
+                    }
+                    else if (
+                        deadLineToValidate
+                        > project
+                            .Stages.Single(s =>
+                                s.StageName.Equals(StageName.DetailedDesignCompletion)
+                            )
+                            .Deadline
+                    )
+                    {
+                        Console.WriteLine(
+                            "Invalid deadline! New deadline for the current stage can not be later than the preceding stage!"
+                        );
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                case StageName.DetailedDesignCompletion:
+                    if (
+                        deadLineToValidate
+                        < project
+                            .Stages.Single(s => s.StageName.Equals(StageName.ConceptCompletion))
+                            .Deadline
+                    )
+                    {
+                        Console.WriteLine(
+                            "Invalid deadline! New deadline for the current stage can not be earlier than the previous stage!"
+                        );
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                default:
+                    return true;
+            }
+        }
+
+        if (project.Type.Equals(ProjectType.EngineeringDrafting))
+        {
+            switch (stage.StageName)
+            {
+                case StageName.ProjectStart:
+                    if (
+                        deadLineToValidate
+                        > project
+                            .Stages.Single(s => s.StageName.Equals(StageName.DraftingCompletion))
+                            .Deadline
+                    )
+                    {
+                        Console.WriteLine(
+                            "Invalid deadline! New deadline for the current stage can not be later than the preceding stage!"
+                        );
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                case StageName.DraftingCompletion:
+                    if (
+                        deadLineToValidate
+                        < project
+                            .Stages.Single(s => s.StageName.Equals(StageName.ProjectStart))
+                            .Deadline
+                    )
+                    {
+                        Console.WriteLine(
+                            "Invalid deadline! New deadline for the current stage can not be earlier than the previous stage!"
+                        );
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                default:
+                    return true;
+            }
+        }
+        return true;
+    }
+
+    private static bool ValidateStageIsCompletedFlag(Project project, Stage stage) //judge if any prior stage is not completed
+    {
+        switch (stage.StageName)
+        {
+            case StageName.ProjectStart:
+                return true;
+            case StageName.ConceptCompletion:
+                if (
+                    project
+                        .Stages.Single(s => s.StageName.Equals(StageName.ProjectStart))
+                        .IsCompleted
+                )
+                {
+                    return true;
+                }
+                else
+                {
+                    Console.WriteLine(
+                        "The stage to be marked as completed can not have a previous stage that is not commpleted."
+                    );
+                    return false;
+                }
+            case StageName.DetailedDesignCompletion:
+                if (
+                    project
+                        .Stages.Single(s => s.StageName.Equals(StageName.ConceptCompletion))
+                        .IsCompleted
+                )
+                {
+                    return true;
+                }
+                else
+                {
+                    Console.WriteLine(
+                        "The stage to be marked as completed can not have a previous stage that is not commpleted."
+                    );
+                    return false;
+                }
+            case StageName.DraftingCompletion:
+                if (
+                    project
+                        .Stages.Single(s => s.StageName.Equals(StageName.ProjectStart))
+                        .IsCompleted
+                )
+                {
+                    return true;
+                }
+                else
+                {
+                    Console.WriteLine(
+                        "The stage to be marked as completed can not have a previous stage that is not commpleted."
+                    );
+                    return false;
+                }
+            default:
+                return true;
+        }
+    }
+
+    public static bool CheckProjectStageIsCompleted(
+        Project projectToUpdate,
+        StageName nameOfTheStageToUpdate
+    )
+    {
+        if (
+            projectToUpdate
+                .Stages.Single(s => s.StageName.Equals(nameOfTheStageToUpdate))
+                .IsCompleted
+        )
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }
