@@ -38,7 +38,9 @@ public static class MenuManager //get input for menu and handle input
                     }
                     else
                     {
+                        Console.ForegroundColor = ConsoleColor.Blue;
                         Console.WriteLine("No existing client yet.......");
+                        Console.ResetColor();
                     }
                     break;
 
@@ -66,7 +68,9 @@ public static class MenuManager //get input for menu and handle input
 
             if (!projectsFound.Any())
             {
+                Console.ForegroundColor = ConsoleColor.Blue;
                 Console.WriteLine("No project found....");
+                Console.ResetColor();
             }
             else
             {

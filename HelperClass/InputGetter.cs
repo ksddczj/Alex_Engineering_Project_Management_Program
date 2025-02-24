@@ -55,7 +55,9 @@ public static class InputGetter
                     //compare userinput with existing clients
                     if (existingClients.Contains(userInput))
                     {
+                        Console.ForegroundColor = ConsoleColor.Blue;
                         Console.WriteLine("Client already exists. Try a different one....");
+                        Console.ResetColor();
                     }
                     else
                     {
@@ -66,7 +68,9 @@ public static class InputGetter
                 }
                 else
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Client name cannot be empty. Please try again.");
+                    Console.ResetColor();
                 }
             }
         }
@@ -92,7 +96,9 @@ public static class InputGetter
         }
         else
         {
+            Console.ForegroundColor = ConsoleColor.Blue;
             Console.WriteLine("No client in the system yet. Add a new client ....");
+            Console.ResetColor();
             GetNewClientFromUser();
         }
 
@@ -122,27 +128,35 @@ public static class InputGetter
                 case ProjectType.AutomotiveEngineering:
                     if (completionDate > DateTime.Now.AddMonths(12))
                     {
+                        Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine("Completion date entered.");
+                        Console.ResetColor();
                         isValidDate = true;
                     }
                     else
                     {
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine(
                             "The completion date must be at least 12 months after current date. Please enter a valid future date."
                         );
+                        Console.ResetColor();
                     }
                     break;
                 case ProjectType.EngineeringDrafting:
                     if (completionDate > DateTime.Now.AddMonths(3))
                     {
+                        Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine("Completion date entered.");
+                        Console.ResetColor();
                         isValidDate = true;
                     }
                     else
                     {
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine(
                             "The completion date must be at least 3 after months current date. Please enter a valid future date."
                         );
+                        Console.ResetColor();
                     }
 
                     break;

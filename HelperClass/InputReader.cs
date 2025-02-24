@@ -7,7 +7,9 @@ public static class InputReader
         int choice;
         while (!int.TryParse(Console.ReadLine(), out choice) || choice < min || choice > max)
         {
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.Write($"Invalid choice. Please enter a number between {min} and {max}: ");
+            Console.ResetColor();
         }
         return choice;
     }
@@ -41,11 +43,15 @@ public static class InputReader
             userInput = Console.ReadLine()?.Trim();
             if (string.IsNullOrEmpty(userInput))
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Input cannot be empty. Please try again.");
+                Console.ResetColor();
             }
             else
             {
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Input entered.");
+                Console.ResetColor();
             }
         } while (string.IsNullOrEmpty(userInput));
 
@@ -70,13 +76,17 @@ public static class InputReader
 
             if (isValidDate)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Date entered.");
+                Console.ResetColor();
             }
             else
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(
                     "Invalid date format. Please enter a valid date in the format yyyy-mm-dd."
                 );
+                Console.ResetColor();
             }
         } while (!isValidDate);
 

@@ -89,13 +89,17 @@ public static class ProjectManager
         if (deadlineIsValid)
         {
             stageToUpdate.UpdateDeadline(newDeadline);
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine(
                 $"Deadline for {nameOfTheStageToUpdate} updated to {newDeadline.ToShortDateString()}."
             );
+            Console.ResetColor();
         }
         else
         {
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"Deadline for {nameOfTheStageToUpdate} is not updated.");
+            Console.ResetColor();
             return;
         }
 
@@ -141,11 +145,15 @@ public static class ProjectManager
         if (stageCanBeMarkedCompleted)
         {
             stageToUpdate.MarkAsCompleted();
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($"Deadline for {nameOfTheStageToUpdate} marked as completed.");
+            Console.ResetColor();
         }
         else
         {
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"Deadline for {nameOfTheStageToUpdate} is not marked as completed.");
+            Console.ResetColor();
             return;
         }
 
@@ -275,9 +283,11 @@ public static class ProjectManager
                             .Deadline
                     )
                     {
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine(
                             "Invalid deadline! New deadline for the current stage can not be later than the preceding stage!"
                         );
+                        Console.ResetColor();
                         return false;
                     }
                     else
@@ -292,9 +302,11 @@ public static class ProjectManager
                             .Deadline
                     )
                     {
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine(
                             "Invalid deadline! New deadline for the current stage can not be earlier than the previous stage!"
                         );
+                        Console.ResetColor();
                         return false;
                     }
                     else if (
@@ -306,9 +318,11 @@ public static class ProjectManager
                             .Deadline
                     )
                     {
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine(
                             "Invalid deadline! New deadline for the current stage can not be later than the preceding stage!"
                         );
+                        Console.ResetColor();
                         return false;
                     }
                     else
@@ -323,9 +337,11 @@ public static class ProjectManager
                             .Deadline
                     )
                     {
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine(
                             "Invalid deadline! New deadline for the current stage can not be earlier than the previous stage!"
                         );
+                        Console.ResetColor();
                         return false;
                     }
                     else
@@ -349,9 +365,11 @@ public static class ProjectManager
                             .Deadline
                     )
                     {
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine(
                             "Invalid deadline! New deadline for the current stage can not be later than the preceding stage!"
                         );
+                        Console.ResetColor();
                         return false;
                     }
                     else
@@ -366,9 +384,11 @@ public static class ProjectManager
                             .Deadline
                     )
                     {
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine(
                             "Invalid deadline! New deadline for the current stage can not be earlier than the previous stage!"
                         );
+                        Console.ResetColor();
                         return false;
                     }
                     else
@@ -399,9 +419,11 @@ public static class ProjectManager
                 }
                 else
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine(
                         "The stage to be marked as completed can not have a previous stage that is not commpleted."
                     );
+                    Console.ResetColor();
                     return false;
                 }
             case StageName.DetailedDesignCompletion:
@@ -415,9 +437,11 @@ public static class ProjectManager
                 }
                 else
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine(
                         "The stage to be marked as completed can not have a previous stage that is not commpleted."
                     );
+                    Console.ResetColor();
                     return false;
                 }
             case StageName.DraftingCompletion:
@@ -431,9 +455,11 @@ public static class ProjectManager
                 }
                 else
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine(
                         "The stage to be marked as completed can not have a previous stage that is not commpleted."
                     );
+                    Console.ResetColor();
                     return false;
                 }
             default:

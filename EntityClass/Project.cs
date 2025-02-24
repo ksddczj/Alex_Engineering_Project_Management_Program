@@ -22,12 +22,14 @@ public abstract class Project
 
     public void SummarizeProjectStatus()
     {
+        Console.ForegroundColor = ConsoleColor.Yellow;
         Console.WriteLine($"Project Name: {ProjectName}");
         Console.WriteLine($"Client: {Client}");
         Console.WriteLine($"Completion Date: {CompletionDate.ToShortDateString()}");
         Console.WriteLine($"Project ID: {ProjectID}");
         Console.WriteLine($"Project Type: {Type}");
         Console.WriteLine("Stages:");
+        Console.ResetColor();
 
         foreach (var stage in this.Stages.OrderBy(s => s.Deadline))
         {
@@ -38,9 +40,11 @@ public abstract class Project
 
             if (!stage.IsCompleted && DateTime.Now > stage.Deadline)
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(
                     $"  WARNING: {stage.StageName} is past its deadline and not yet completed!"
                 );
+                Console.ResetColor();
             }
         }
     }

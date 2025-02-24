@@ -24,7 +24,9 @@ public static class TaskManager
 
         //create new project
         ProjectManager.CreateNewProject(projectName, client, projectType, completionDate);
+        Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine("New project created.");
+        Console.ResetColor();
     }
 
     public static List<Project> DoFindProjectByName()
@@ -68,9 +70,11 @@ public static class TaskManager
         //judge if the stage is already marked completed
         if (ProjectManager.CheckProjectStageIsCompleted(projectToUpdate, nameOfTheStageToUpdate))
         {
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(
                 "Stage is alreay makred as completed. Deadline of it can not be updated."
             );
+            Console.ResetColor();
             return;
         }
 
@@ -94,7 +98,9 @@ public static class TaskManager
             )
         )
         {
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("Stage is alreay makred as completed.");
+            Console.ResetColor();
             return;
         }
 
