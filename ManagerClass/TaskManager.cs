@@ -64,14 +64,6 @@ public static class TaskManager
         StageName stageToUpdate = InputGetter.GetProjectStageFromUser(projectToUpdate.Type);
         DateTime newDealine = InputGetter.GetNewDeadlineFromUser();
         ProjectManager.UpdateProjectStageDeadline(projectToUpdate, stageToUpdate, newDealine);
-
-        if (
-            stageToUpdate == StageName.DraftingCompletion
-            || stageToUpdate == StageName.DetailedDesignCompletion
-        ) // this is an after thought. The logic should be in projectManager.UpdateProjectStageDeadline
-        {
-            projectToUpdate.UpdateCompletionDate(newDealine);
-        }
     }
 
     public static void DoMarkStageAsCompleted(Project projectToUpdate) //review timeline

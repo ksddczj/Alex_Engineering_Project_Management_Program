@@ -73,26 +73,36 @@ public static class ProjectManager
     }
 
     public static void UpdateProjectStageDeadline(
-        Project project,
-        StageName stageName,
+        Project projectToUpdate,
+        StageName nameOfTheStageToUpdate,
         DateTime newDeadline
     )
     {
-        // Console.WriteLine($"Updating deadline for {stageName}...");
-        Stage stageToUpdate = project.Stages.Where(s => s.StageName == stageName).First(); // review LINQ.
+        Stage stageToUpdate = projectToUpdate.Stages.Single(s =>
+            s.StageName == nameOfTheStageToUpdate
+        );
         stageToUpdate.UpdateDeadline(newDeadline);
         Console.WriteLine(
-            $"Deadline for {stageName} updated to {newDeadline.ToShortDateString()}."
+            $"Deadline for {nameOfTheStageToUpdate} updated to {newDeadline.ToShortDateString()}."
         );
 
-        // Use a new DbContext instance to save the changes
         using (var context = new DatabaseContext())
         {
             // Re-attach the project entity
-            context.Projects.Attach(project);
+            context.Projects.Attach(projectToUpdate);
 
             // Mark the stage entity as modified
             context.Entry(stageToUpdate).State = EntityState.Modified;
+
+            if (
+                nameOfTheStageToUpdate == StageName.DraftingCompletion
+                || nameOfTheStageToUpdate == StageName.DetailedDesignCompletion
+            )
+            {
+                projectToUpdate.UpdateCompletionDate(newDeadline);
+                // Mark only the CompletionDate property as modified
+                context.Entry(projectToUpdate).Property(p => p.CompletionDate).IsModified = true;
+            }
 
             // Save the changes to the database
             context.SaveChanges();
